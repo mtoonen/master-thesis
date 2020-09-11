@@ -1,5 +1,8 @@
-package nl.meine.master.testsuite;
+package nl.meine.master.testsuite.tests;
 
+
+import nl.meine.master.testsuite.CommonErrorTest;
+import nl.meine.master.testsuite.InlineCompiler;
 
 public class EarlyExitTest extends CommonErrorTestRunner {
 

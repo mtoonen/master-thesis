@@ -1,5 +1,9 @@
 package nl.meine.master.testsuite;
 
+import nl.meine.master.testsuite.tests.CommonErrorTestRunner;
+import nl.meine.master.testsuite.tests.EarlyExitTest;
+import nl.meine.master.testsuite.tests.ForEachButIndexTest;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

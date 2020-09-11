@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class InlineCompilerTest {
 
@@ -38,5 +38,20 @@ class InlineCompilerTest {
             instance.init(TestUtils.FUNCTION_UNCOMPILABLE);
             instance.execute("countEven", input, int[].class);
         });
+    }
+
+    @Test
+    void init() throws Exception {
+        instance.init(TestUtils.FUNCTION_FOREACHBUTINDEX);
+        assertTrue(instance.classFile.exists());
+        assertTrue(instance.sourceFile.exists());
+    }
+
+    @Test
+    void testTearDown() throws Exception {
+        instance.init(TestUtils.FUNCTION_FOREACHBUTINDEX);
+        instance.tearDown();
+        assertFalse(instance.classFile.exists());
+        assertFalse(instance.sourceFile.exists());
     }
 }

@@ -19,8 +19,8 @@ import javax.tools.ToolProvider;
 public class InlineCompiler {
 
 
-    private File sourceFile;
-    private File classFile;
+    File sourceFile;
+    File classFile;
 
     public Object init(String functionBody) throws Exception {
         StringBuilder sb = new StringBuilder(64);
