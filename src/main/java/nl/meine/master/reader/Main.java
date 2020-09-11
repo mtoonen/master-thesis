@@ -1,10 +1,14 @@
 package nl.meine.master.reader;
 
+import nl.meine.master.testsuite.Label;
 import nl.meine.master.testsuite.TestRunner;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Main {
     public static void main(String[] args){
@@ -68,9 +72,9 @@ public class Main {
                 String submittedfunction = rs.getString("submittedfunction");
                 String userid = rs.getString("userid");
                // System.out.println(String.format("Calculating userid %s with time %s",userid, ts));
-                String ownLabel = tr.calculateLabel(exercise, submittedfunction);
+                Label ownLabel = tr.calculateLabel(exercise, submittedfunction);
                 if(ownLabel != null){
-                    System.out.println( String.format("Time %s, dblabel %s, ownlabel %s", ts, label, ownLabel));
+                    System.out.println( String.format("Time %s, dblabel %s, ownlabel %s - confidence %d", ts, label, ownLabel.getLabel(), ownLabel.getConfidence()));
                 }
 
             }

@@ -20,7 +20,7 @@ class TestRunnerTest {
 
     @Test
     void calculateLabel() {
-        String label = instance.calculateLabel("1.even", TestUtils.FUNCTION_FOREACHBUTINDEX);
-        assertEquals("foreachbutindex", label);
+        Label label = instance.calculateLabel("1.even", TestUtils.FUNCTION_FOREACHBUTINDEX);
+        assertEquals("foreachbutindex", label.getLabel());
     }
 }

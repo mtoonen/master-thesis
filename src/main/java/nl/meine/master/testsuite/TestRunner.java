@@ -20,7 +20,7 @@ public class TestRunner {
         testRunners.add(new EarlyExitLabel(compiler));
     }
 
-    public String calculateLabel(String exercise, String functionBody){
+    public Label calculateLabel(String exercise, String functionBody){
         String functionName = mappingExerciseToFunction.get(exercise);
         if(functionName == null){
             return null;
@@ -35,14 +35,19 @@ public class TestRunner {
 
             int score = 0;
             String label = "";
+            Map<String, Integer> labelWithScore = new HashMap<>();
             for (CommonLogicLabel runner: testRunners) {
                 int runnerScore =runner.calcScore(functionName);
+                String runnerLabel = runner.getLabel();
                 if (runnerScore > score) {
-                    label = runner.getLabel();
                     score = runnerScore;
+                    label = runnerLabel;
                 }
+                labelWithScore.put(runnerLabel, runnerScore);
             }
-            return label;
+
+
+            return new Label(label,score);
         } catch (UncompilableException e) {
           // cannot compile
             int a = 0;
