@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * Used for bookkeeping: CommonErrorTestRunner keeps a list these methods for automatic running of these methods
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD})
 public @interface CommonLogicTest {
     public String[] functionNames();
 }

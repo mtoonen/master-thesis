@@ -59,6 +59,7 @@ public abstract class CommonLogicLabel {
                     test.invoke(this, body);
                 } catch (Exception e) {
                  //   e.printStackTrace();
+                    int a =0;
                 }
             });
         }

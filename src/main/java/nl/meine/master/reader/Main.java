@@ -18,7 +18,7 @@ public class Main {
     public static void read(String[] args){
         String sql = "select *" +
                 "from trainingset "
-                //+ "where label ='foreachbutindex' order by time"
+                + "where label ='foreachbutindex' order by time"
                 ;
 
         TestRunner tr =new TestRunner();
@@ -36,6 +36,9 @@ public class Main {
                 String userid = rs.getString("userid");
                 Label ownLabel = tr.calculateLabel(exercise, submittedfunction);
                 if(ownLabel != null){
+                    if(ownLabel.getConfidence() == 0){
+                        tr.calculateLabel(exercise, submittedfunction);
+                    }
                     System.out.println( String.format("Time %s, dblabel %s, ownlabel %s - confidence %d", ts, label, ownLabel.getLabel(), ownLabel.getConfidence()));
                 }
 

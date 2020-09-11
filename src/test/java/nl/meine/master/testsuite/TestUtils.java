@@ -5,7 +5,7 @@ public class TestUtils {
     public final static String FUNCTION_FOREACHBUTINDEX = "public static int countEven(int [] values)\n" +
             "    {\n" +
             "        int count = 0;\n" +
-            "        for (int i = 0; i < values.length; i++)\n" +
+            "        for (int i : values)\n" +
             "        {\n" +
             "            if (values[i] % 2 == 0)\n" +
             "            {\n" +

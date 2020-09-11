@@ -37,6 +37,23 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
     }
 
     @CommonLogicTest(functionNames = {"countEven"})
+    public void exceptionTestMinus(String functionBody) {
+        /**
+         * This test is based on the premise that when using the value to retrieve a value from the array on that index
+         * (the value being the index), we get an ArrayIndexOutOfBoundsException when defining an array of length 1
+         * with the first element being > 1. This will let the function retrieve a value outside the bounds
+         */
+        Object[] input = {new int[]{-2}};
+        try {
+            Object result = executeSingle(functionBody,functionName, input);
+        } catch (Exception e) {
+            if(((InvocationTargetException) e).getTargetException() instanceof  ArrayIndexOutOfBoundsException){
+                testResultsPerExercise.get(functionName).put(getCurrentTestName(), true);
+            }
+        }
+    }
+
+    @CommonLogicTest(functionNames = {"countEven"})
     public void countSpecificIndices(String functionBody) throws Exception {
         /**
          * This test looks if the value is used to look up a value in the array. We set all the values to 2, except on the 3rd index,
@@ -59,7 +76,7 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
          */
         Object[] input = {new int[]{0,0,0,0,1,}};
         Object result = executeSingle(functionBody,functionName, input);
-        testResultsPerExercise.get(functionName).put(getCurrentTestName(), result.equals(0));
+        testResultsPerExercise.get(functionName).put(getCurrentTestName(), result.equals(5));
     }
 
 }

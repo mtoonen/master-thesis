@@ -22,11 +22,18 @@ public class InlineCompiler {
     File sourceFile;
     File classFile;
 
+    String processFunction(String functionBody){
+        if(!functionBody.startsWith("public")){
+            functionBody = "public " + functionBody;
+        }
+        return functionBody;
+    }
+
     public Object init(String functionBody) throws Exception {
         StringBuilder sb = new StringBuilder(64);
         sb.append("package nl.meine.master.testsuite;\n");
         sb.append("public class SubmittedFunction  {\n");
-        sb.append(functionBody);
+        sb.append(processFunction(functionBody));
         sb.append("}\n");
         Object returnVal = null;
         File basePath = new File("nl/meine/master/testsuite");
@@ -111,8 +118,12 @@ public class InlineCompiler {
     }
 
     public void tearDown(){
-        sourceFile.delete();
-        classFile.delete();
+        if(sourceFile != null){
+            sourceFile.delete();
+        }
+        if(classFile != null){
+            classFile.delete();
+        }
     }
 
 }

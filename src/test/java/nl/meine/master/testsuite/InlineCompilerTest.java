@@ -54,4 +54,16 @@ class InlineCompilerTest {
         assertFalse(instance.classFile.exists());
         assertFalse(instance.sourceFile.exists());
     }
+
+    @Test
+    void processFunctionWithoutPublic() {
+        String input = "pietje";
+        assertEquals("public pietje",instance.processFunction(input));
+    }
+
+    @Test
+    void processFunctionWithPublic() {
+        String input = "public pietje";
+        assertEquals("public pietje",instance.processFunction(input));
+    }
 }
