@@ -1,7 +1,4 @@
-package nl.meine.master.testsuite.tests;
-
-import nl.meine.master.testsuite.CommonErrorTest;
-import nl.meine.master.testsuite.InlineCompiler;
+package nl.meine.master.testsuite;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -11,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Interface to be implemented by all classes that identify a common logic error
  */
-public abstract class CommonErrorTestRunner {
+public abstract class CommonLogicLabel {
     protected String label;
     protected Map<String, List<Method>> submissionsPerExercise = new HashMap<>();
     protected Map<String, Map<String, Boolean>> testResultsPerExercise = new HashMap<>();
@@ -19,14 +16,14 @@ public abstract class CommonErrorTestRunner {
 
     protected InlineCompiler compiler;
 
-    void init(String exercise, Class[] parameterTypes, InlineCompiler compiler) {
+    protected void init(String exercise, Class[] parameterTypes, InlineCompiler compiler) {
         testResultsPerExercise.put(exercise, new HashMap<>());
         parameterTypesPerExercise.put(exercise, parameterTypes);
 
-        Class<? extends Annotation> annotation = CommonErrorTest.class;
+        Class<? extends Annotation> annotation = CommonLogicTest.class;
         for (final Method method : this.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(annotation)) {
-                CommonErrorTest a = (CommonErrorTest) method.getAnnotation(annotation);
+                CommonLogicTest a = (CommonLogicTest) method.getAnnotation(annotation);
                 for (String ex : a.exercises()) {
 
                     if (!submissionsPerExercise.containsKey(exercise)) {
@@ -64,7 +61,7 @@ public abstract class CommonErrorTestRunner {
 
     }
 
-    String getCurrentTestName(){
+    protected String getCurrentTestName(){
         StackWalker walker = StackWalker.getInstance();
         Optional<String> methodName = walker.walk(frames -> frames
                 .skip(1)
@@ -73,7 +70,7 @@ public abstract class CommonErrorTestRunner {
         return methodName.get();
     }
 
-    Object executeSingle(String functionbody,String functionName,  Object[] input)throws Exception{
+    protected Object executeSingle(String functionbody,String functionName,  Object[] input)throws Exception{
         return compiler.execute( functionName, input, parameterTypesPerExercise.get(functionName));
     }
 

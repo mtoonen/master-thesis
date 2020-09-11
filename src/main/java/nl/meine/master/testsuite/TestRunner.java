@@ -1,8 +1,7 @@
 package nl.meine.master.testsuite;
 
-import nl.meine.master.testsuite.tests.CommonErrorTestRunner;
-import nl.meine.master.testsuite.tests.EarlyExitTest;
-import nl.meine.master.testsuite.tests.ForEachButIndexTest;
+import nl.meine.master.testsuite.tests.EarlyExitLabel;
+import nl.meine.master.testsuite.tests.ForEachButIndexLabel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,15 +9,15 @@ import java.util.List;
 import java.util.Map;
 
 public class TestRunner {
-    private List<CommonErrorTestRunner> testRunners = new ArrayList<>();
+    private List<CommonLogicLabel> testRunners = new ArrayList<>();
     private Map<String, String> mappingExerciseToFunction = new HashMap<>();
     protected InlineCompiler compiler = new InlineCompiler();
 
 
     public TestRunner(){
         mappingExerciseToFunction.put("1.even", "countEven");
-        testRunners.add(new ForEachButIndexTest(compiler));
-        testRunners.add(new EarlyExitTest(compiler));
+        testRunners.add(new ForEachButIndexLabel(compiler));
+        testRunners.add(new EarlyExitLabel(compiler));
     }
 
     public String calculateLabel(String exercise, String functionBody){
@@ -36,7 +35,7 @@ public class TestRunner {
 
             int score = 0;
             String label = "";
-            for (CommonErrorTestRunner runner: testRunners) {
+            for (CommonLogicLabel runner: testRunners) {
                 int runnerScore =runner.calcScore(functionName);
                 if (runnerScore > score) {
                     label = runner.getLabel();
