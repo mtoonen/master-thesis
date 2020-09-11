@@ -3,7 +3,6 @@ package nl.meine.master.reader;
 import nl.meine.master.testsuite.TestRunner;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.sqlite.util.StringUtils;
 
 import java.sql.*;
 
@@ -50,7 +49,6 @@ public class Main {
     }
 
     public static void read(String[] args){
-        //String sql = "SELECT * FROM studyrequests";
         String sql = "select *" +
                 "from trainingset "
                 //+ "where label ='foreachbutindex' order by time"
