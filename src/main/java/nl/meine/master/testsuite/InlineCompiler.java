@@ -2,9 +2,7 @@ package nl.meine.master.testsuite;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -20,23 +18,11 @@ import javax.tools.ToolProvider;
 
 public class InlineCompiler {
 
-    public static void main(String[] args) throws Exception {
 
-        StringBuilder sb = new StringBuilder(64);
-        sb.append("    public int doStuff(int[] a ) {\n");
-        sb.append("        System.out.println(\"Hello sworld\" + a[0]);\n");
-        sb.append("        return 2;\n");
+    private File sourceFile;
+    private File classFile;
 
-        sb.append("    }\n");
-        InlineCompiler ic = new InlineCompiler();
-        int[] a = {12};
-        Object[] params = {a};
-        Class[] paramTypes = {int[].class};
-        //ic.init(sb.toString());
-        System.out.println("REturnval: " + ic.execute( "doStuff", params, paramTypes));
-    }
-
-    public Object execute(String functionBody, String functionName, Object[] params, Class... paramTypes) throws Exception {
+    public Object init(String functionBody) throws Exception {
         StringBuilder sb = new StringBuilder(64);
         sb.append("package nl.meine.master.testsuite;\n");
         sb.append("public class SubmittedFunction  {\n");
@@ -44,9 +30,8 @@ public class InlineCompiler {
         sb.append("}\n");
         Object returnVal = null;
         File basePath = new File("nl/meine/master/testsuite");
-        File sourceFile = new File(basePath, "SubmittedFunction.java");
-        File classFile = new File(basePath, "SubmittedFunction.class");
-
+        sourceFile = new File(basePath, "SubmittedFunction.java");
+        classFile = new File(basePath, "SubmittedFunction.class");
 
         /** Compilation Requirements *********************************************************************************************/
         DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
@@ -67,7 +52,6 @@ public class InlineCompiler {
                     }
                 }
 
-
                 // This sets up the class path that the compiler will use.
                 // I've added the .jar file that contains the DoStuff interface within in it...
                 List<String> optionList = new ArrayList<String>();
@@ -86,7 +70,7 @@ public class InlineCompiler {
                 /********************************************************************************************* Compilation Requirements **/
                 if (task.call()) {
                     // compilation succeeded. Execution comes later
-                    returnVal = execute(functionName, params, paramTypes);
+                  //  returnVal = execute(functionName, params, paramTypes);
                     int a = 0;
                 } else {
                     String message = "";
@@ -99,15 +83,13 @@ public class InlineCompiler {
                 }
             }  finally {
                 fileManager.close();
-                sourceFile.delete();
-                classFile.delete();
             }
         }
         return returnVal;
     }
 
 
-    private Object execute( String functionName, Object[] params, Class... paramTypes) throws
+    public Object execute(String functionName, Object[] params, Class... paramTypes) throws
             Exception {
 
         Object returnVal = null;
@@ -128,5 +110,9 @@ public class InlineCompiler {
         return returnVal;
     }
 
+    public void tearDown(){
+        sourceFile.delete();
+        classFile.delete();
+    }
 
 }

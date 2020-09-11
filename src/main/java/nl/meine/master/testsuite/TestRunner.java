@@ -23,10 +23,12 @@ public class TestRunner {
             return null;
         }
         try {
+            compiler.init(functionBody);
             testRunners.forEach(runner -> {
                 runner.reset();
                 runner.runall(functionBody,functionName);
             });
+            compiler.tearDown();
 
             int score = 0;
             String label = "";
@@ -38,9 +40,9 @@ public class TestRunner {
                 }
             }
             return label;
-     //   } catch (UncompilableException e) {
+        } catch (UncompilableException e) {
           // cannot compile
-        //    int a = 0;
+            int a = 0;
         }catch (Exception e){
             System.err.println("Error during running" + e.getLocalizedMessage());
         }

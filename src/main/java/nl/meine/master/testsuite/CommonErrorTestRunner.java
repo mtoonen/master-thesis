@@ -1,8 +1,5 @@
 package nl.meine.master.testsuite;
 
-import nl.meine.master.testsuite.CommonErrorTest;
-import nl.meine.master.testsuite.InlineCompiler;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -74,7 +71,7 @@ public abstract class CommonErrorTestRunner {
     }
 
     Object executeSingle(String functionbody,String functionName,  Object[] input)throws Exception{
-        return compiler.execute(functionbody, functionName, input, parameterTypesPerExercise.get(functionName));
+        return compiler.execute( functionName, input, parameterTypesPerExercise.get(functionName));
     }
 
     public String getLabel(){
