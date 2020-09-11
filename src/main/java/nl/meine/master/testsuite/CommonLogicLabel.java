@@ -16,20 +16,24 @@ public abstract class CommonLogicLabel {
 
     protected InlineCompiler compiler;
 
-    protected void init(String exercise, Class[] parameterTypes, InlineCompiler compiler) {
-        testResultsPerExercise.put(exercise, new HashMap<>());
-        parameterTypesPerExercise.put(exercise, parameterTypes);
+    protected void init(String functionName, Class[] parameterTypes, InlineCompiler compiler) {
+        testResultsPerExercise.put(functionName, new HashMap<>());
+        parameterTypesPerExercise.put(functionName, parameterTypes);
 
+        // look which methods have the CommonLogicTest annotation. These are unittests for Common Logic Errors
         Class<? extends Annotation> annotation = CommonLogicTest.class;
         for (final Method method : this.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(annotation)) {
+                // Check for which exercises the tests are available
                 CommonLogicTest a = (CommonLogicTest) method.getAnnotation(annotation);
-                for (String ex : a.exercises()) {
-
-                    if (!submissionsPerExercise.containsKey(exercise)) {
-                        submissionsPerExercise.put(exercise, new ArrayList<>());
+                for (String forFunctionName : a.functionNames()) {
+                    if(!forFunctionName.equals(functionName)){
+                        continue;
                     }
-                    submissionsPerExercise.get(exercise).add(method);
+                    if (!submissionsPerExercise.containsKey(functionName)) {
+                        submissionsPerExercise.put(functionName, new ArrayList<>());
+                    }
+                    submissionsPerExercise.get(functionName).add(method);
                 }
             }
         }

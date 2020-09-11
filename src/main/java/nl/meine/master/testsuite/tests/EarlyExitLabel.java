@@ -17,7 +17,7 @@ public class EarlyExitLabel extends CommonLogicLabel {
         init(functionName, paramType,compiler);
     }
 
-    @CommonLogicTest(exercises = {"countEven"})
+    @CommonLogicTest(functionNames = {"countEven"})
     public void earlyExit(String functionBody) throws Exception {
         Object[] input = {new int[]{2,2}};
         int expected = 0;
