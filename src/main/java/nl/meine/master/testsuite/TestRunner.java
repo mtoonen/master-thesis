@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TestRunner {
     private List<CommonLogicLabel> testRunners = new ArrayList<>();
@@ -20,7 +21,20 @@ public class TestRunner {
         testRunners.add(new EarlyExitLabel(compiler));
     }
 
-    public Label calculateLabel(String exercise, String functionBody){
+    public boolean hasTestForExercise(String exercise){
+        if(!mappingExerciseToFunction.containsKey(exercise)){
+            return false;
+        }
+        AtomicBoolean hasTest = new AtomicBoolean(false);
+        testRunners.forEach(runner -> {
+            if(runner.hasTestForExercise(mappingExerciseToFunction.get(exercise))){
+                hasTest.set(true);
+            }
+        });
+        return hasTest.get();
+    }
+
+    public Label calculateLabel(String exercise, String functionBody) throws UncompilableException{
         String functionName = mappingExerciseToFunction.get(exercise);
         if(functionName == null){
             return null;
@@ -45,15 +59,13 @@ public class TestRunner {
                 }
                 labelWithScore.put(runnerLabel, runnerScore);
             }
-
-
             return new Label(label,score);
         } catch (UncompilableException e) {
-          // cannot compile
-            int a = 0;
+          throw e;
         }catch (Exception e){
             System.err.println("Error during running" + e.getLocalizedMessage());
         }
         return null;
     }
+
 }

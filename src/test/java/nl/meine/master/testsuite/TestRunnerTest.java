@@ -19,7 +19,7 @@ class TestRunnerTest {
     }
 
     @Test
-    void calculateLabel() {
+    void calculateLabel() throws UncompilableException {
         Label label = instance.calculateLabel("1.even", TestUtils.FUNCTION_FOREACHBUTINDEX);
         assertEquals("foreachbutindex", label.getLabel());
     }

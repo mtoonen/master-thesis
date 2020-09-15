@@ -19,7 +19,7 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
         init(functionName, paramType, compiler);
     }
 
-    @CommonLogicTest(functionNames = {"countEven"})
+  //  @CommonLogicTest(functionNames = {"countEven"})
     public void exceptionTest(String functionBody) {
         /**
          * This test is based on the premise that when using the value to retrieve a value from the array on that index
@@ -36,7 +36,7 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
         }
     }
 
-    @CommonLogicTest(functionNames = {"countEven"})
+  //  @CommonLogicTest(functionNames = {"countEven"})
     public void exceptionTestMinus(String functionBody) {
         /**
          * This test is based on the premise that when using the value to retrieve a value from the array on that index
@@ -53,7 +53,7 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
         }
     }
 
-    @CommonLogicTest(functionNames = {"countEven"})
+    //@CommonLogicTest(functionNames = {"countEven"})
     public void countSpecificIndices(String functionBody) throws Exception {
         /**
          * This test looks if the value is used to look up a value in the array. We set all the values to 2, except on the 3rd index,
@@ -66,7 +66,7 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
         testResultsPerExercise.get(functionName).put(getCurrentTestName(), result.equals(1));
     }
 
-    @CommonLogicTest(functionNames = {"countEven"})
+    //@CommonLogicTest(functionNames = {"countEven"})
     public void countSpecificIndices2(String functionBody) throws Exception {
         /**
          * This test looks if the value is used to look up a value in the array. We set all the values to 2, except on the 3rd index,

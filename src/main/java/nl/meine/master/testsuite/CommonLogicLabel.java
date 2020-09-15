@@ -16,6 +16,10 @@ public abstract class CommonLogicLabel {
 
     protected InlineCompiler compiler;
 
+    protected boolean hasTestForExercise(String exercise){
+        return submissionsPerExercise.containsKey(exercise);
+    }
+
     protected void init(String functionName, Class[] parameterTypes, InlineCompiler compiler) {
         testResultsPerExercise.put(functionName, new HashMap<>());
         parameterTypesPerExercise.put(functionName, parameterTypes);
