@@ -1,5 +1,6 @@
 package nl.meine.master.testsuite;
 
+import nl.meine.master.testsuite.tests.AlwaysAddLabel;
 import nl.meine.master.testsuite.tests.EarlyExitLabel;
 import nl.meine.master.testsuite.tests.ForEachButIndexLabel;
 
@@ -22,6 +23,7 @@ public class TestRunner {
         mappingExerciseToFunction.put("5.double", "hasDoubled");
         testRunners.add(new ForEachButIndexLabel(compiler));
         testRunners.add(new EarlyExitLabel(compiler));
+        testRunners.add(new AlwaysAddLabel(compiler));
     }
 
     public boolean hasTestForExercise(String exercise){

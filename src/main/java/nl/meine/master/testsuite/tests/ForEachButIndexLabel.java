@@ -97,7 +97,14 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
          */
         Object[] input = {new int[]{1, 1, 1, 1}, false};
         Object result = executeSingle(input);
-        addTestScore(result.equals(4));
+
+        try {
+            executeSingle(new Object[] {new int []{3},false}); // should crash
+        } catch (Exception e) {
+            if (((InvocationTargetException) e).getTargetException() instanceof ArrayIndexOutOfBoundsException) {
+                addTestScore(result.equals(4));
+            }
+        }
     }
 
     @CommonLogicTest(functionNames = {"sumValues"})
@@ -107,7 +114,13 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
          */
         Object[] input = {new int[]{1, 1, 1, 1}, true};
         Object result = executeSingle(input);
-        addTestScore(result.equals(4));
+        try {
+            executeSingle(new Object[] {new int []{3},false}); // should crash
+        } catch (Exception e) {
+            if (((InvocationTargetException) e).getTargetException() instanceof ArrayIndexOutOfBoundsException) {
+                addTestScore(result.equals(4));
+            }
+        }
     }
 
     @CommonLogicTest(functionNames = {"oddSum"})

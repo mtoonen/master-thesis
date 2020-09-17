@@ -7,8 +7,6 @@ import nl.meine.master.testsuite.InlineCompiler;
 
 public class EarlyExitLabel extends CommonLogicLabel {
 
-    public Class[] paramType = null;
-
     public EarlyExitLabel(InlineCompiler compiler) {
         label = "earlyexit";
         this.compiler = compiler;

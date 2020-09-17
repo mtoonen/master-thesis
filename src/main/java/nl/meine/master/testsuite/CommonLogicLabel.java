@@ -75,7 +75,7 @@ public abstract class CommonLogicLabel {
     protected String getCurrentTestName(){
         StackWalker walker = StackWalker.getInstance();
         Optional<String> methodName = walker.walk(frames -> frames
-                .skip(1)
+                .skip(2)
                 .findFirst()
                 .map(StackWalker.StackFrame::getMethodName));
         return methodName.get();

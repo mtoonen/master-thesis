@@ -26,11 +26,11 @@ public class Main {
                 "from trainingset "
                 + "where "
                 + "label in (" +
-               // "'earlyexit'," +
-                //" 'foreachbutindex'," +
+                //"'earlyexit'," +
+              //  " 'foreachbutindex'," +
                 "'alwaysadd'"+
                 ") "
-           //     +"and TIME = '2019-10-14 13:00:46.158164'"
+            //    +"and TIME = '2019-10-14 08:03:24.237775'"
                  //+" and exerciseid = '3.oddsum' order by time"
                 ;
 
