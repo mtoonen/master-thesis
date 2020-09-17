@@ -25,8 +25,13 @@ public class Main {
         String sql = "select *" +
                 "from trainingset "
                 + "where "
-                + "label ='earlyexit' "
-                 +" and exerciseid = '5.double' order by time"
+                + "label in (" +
+               // "'earlyexit'," +
+                //" 'foreachbutindex'," +
+                "'alwaysadd'"+
+                ") "
+           //     +"and TIME = '2019-10-14 13:00:46.158164'"
+                 //+" and exerciseid = '3.oddsum' order by time"
                 ;
 
         TestRunner tr = new TestRunner();
@@ -55,10 +60,10 @@ public class Main {
 
                 Label ownLabel = null;
                 try {
-                    ownLabel = tr.calculateLabel(exercise, submittedfunction);
 
                     totalMap.put(dbLabel, totalMap.getOrDefault(dbLabel, 0) + 1);
                     total++;
+                    ownLabel = tr.calculateLabel(exercise, submittedfunction);
 
                     if(!tr.hasTestForExercise(exercise)){
                         exercisesNotChecked.add(exercise);
@@ -72,6 +77,8 @@ public class Main {
                         if (ownLabel.getLabel().equals(dbLabel)) {
                             totalCorrectMap.put(dbLabel, totalCorrectMap.getOrDefault(dbLabel, 0) + 1);
                             totalCorrect++;
+                        }else{
+                            int a = 0;
                         }
                     } else {
                         int a = 0;
@@ -117,6 +124,5 @@ public class Main {
     public Double calculateRecall(int totalCorrect, int total) {
         return totalCorrect / (double) total;
     }
-
 
 }
