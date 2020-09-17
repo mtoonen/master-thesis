@@ -1,6 +1,5 @@
 package nl.meine.master.testsuite.tests;
 
-import nl.meine.master.testsuite.CommonLogicTest;
 import nl.meine.master.testsuite.CommonLogicLabel;
 import nl.meine.master.testsuite.InlineCompiler;
 
@@ -10,13 +9,11 @@ import java.lang.reflect.InvocationTargetException;
 public class ForEachButIndexLabel extends CommonLogicLabel {
 
     public Class[] paramType = null;
-    public String functionName = null;
 
     public ForEachButIndexLabel(InlineCompiler compiler) {
         label = "foreachbutindex";
-        paramType = new Class[]{int[].class};
-        functionName = "countEven";
-        init(functionName, paramType, compiler);
+        this.compiler = compiler;
+        addFunction("countEven", new Class[]{int[].class});
     }
 
   //  @CommonLogicTest(functionNames = {"countEven"})
@@ -28,10 +25,10 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
          */
         Object[] input = {new int[]{2}};
         try {
-            Object result = executeSingle(functionBody,functionName, input);
+            Object result = executeSingle( input);
         } catch (Exception e) {
             if(((InvocationTargetException) e).getTargetException() instanceof  ArrayIndexOutOfBoundsException){
-                testResultsPerExercise.get(functionName).put(getCurrentTestName(), true);
+                addTestScore(true);
             }
         }
     }
@@ -45,10 +42,10 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
          */
         Object[] input = {new int[]{-2}};
         try {
-            Object result = executeSingle(functionBody,functionName, input);
+            Object result = executeSingle( input);
         } catch (Exception e) {
             if(((InvocationTargetException) e).getTargetException() instanceof  ArrayIndexOutOfBoundsException){
-                testResultsPerExercise.get(functionName).put(getCurrentTestName(), true);
+                addTestScore(true);
             }
         }
     }
@@ -62,8 +59,8 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
          * only one instance of an even number
          */
         Object[] input = {new int[]{2, 2, 1, 2,2}};
-        Object result = executeSingle(functionBody,functionName, input);
-        testResultsPerExercise.get(functionName).put(getCurrentTestName(), result.equals(1));
+        Object result = executeSingle( input);
+        addTestScore(result.equals(1));
     }
 
     //@CommonLogicTest(functionNames = {"countEven"})
@@ -75,8 +72,8 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
          * only one instance of an even number
          */
         Object[] input = {new int[]{0,0,0,0,1,}};
-        Object result = executeSingle(functionBody,functionName, input);
-        testResultsPerExercise.get(functionName).put(getCurrentTestName(), result.equals(5));
+        Object result = executeSingle( input);
+        addTestScore(result.equals(5));
     }
 
 }

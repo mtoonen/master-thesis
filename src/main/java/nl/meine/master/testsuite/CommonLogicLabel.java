@@ -16,11 +16,13 @@ public abstract class CommonLogicLabel {
 
     protected InlineCompiler compiler;
 
+    protected String currentFunctionName;
+
     protected boolean hasTestForExercise(String exercise){
         return submissionsPerExercise.containsKey(exercise);
     }
 
-    protected void init(String functionName, Class[] parameterTypes, InlineCompiler compiler) {
+    protected void addFunction(String functionName, Class[] parameterTypes) {
         testResultsPerExercise.put(functionName, new HashMap<>());
         parameterTypesPerExercise.put(functionName, parameterTypes);
 
@@ -41,7 +43,6 @@ public abstract class CommonLogicLabel {
                 }
             }
         }
-        this.compiler = compiler;
     }
 
     public void reset(){
@@ -56,6 +57,7 @@ public abstract class CommonLogicLabel {
     }
 
     public void runall(String body, String functionName){
+        this.currentFunctionName = functionName;
         List<Method> methods = submissionsPerExercise.get(functionName);
         if(methods !=null) {
             methods.forEach(test -> {
@@ -79,8 +81,8 @@ public abstract class CommonLogicLabel {
         return methodName.get();
     }
 
-    protected Object executeSingle(String functionbody,String functionName,  Object[] input)throws Exception{
-        return compiler.execute( functionName, input, parameterTypesPerExercise.get(functionName));
+    protected Object executeSingle( Object[] input)throws Exception{
+        return compiler.execute( this.currentFunctionName, input, parameterTypesPerExercise.get(this.currentFunctionName));
     }
 
     public String getLabel(){
@@ -89,10 +91,10 @@ public abstract class CommonLogicLabel {
 
     public int calcScore(String exercise) {
         AtomicInteger score = new AtomicInteger(100);
-        Map<String, Boolean> tests = testResultsPerExercise.get(exercise);
-        if(tests.isEmpty()){
+        if(!testResultsPerExercise.containsKey(exercise) || testResultsPerExercise.get(exercise).isEmpty()){
             return 0;
         }
+        Map<String, Boolean> tests = testResultsPerExercise.get(exercise);
         int scorePerTest = score.get() / tests.size();
         tests.forEach((s, passed) -> {
             if (!passed) {
@@ -101,5 +103,9 @@ public abstract class CommonLogicLabel {
         });
         return score.intValue();
 
+    }
+
+    public void addTestScore(boolean success){
+        testResultsPerExercise.get(this.currentFunctionName).put(getCurrentTestName(), success);
     }
 }

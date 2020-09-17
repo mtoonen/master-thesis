@@ -26,7 +26,7 @@ public class Main {
                 "from trainingset "
                 + "where "
                 + "label ='earlyexit' "
-                // +" exerciseid = '1.even' order by time"
+                 +" and exerciseid = '5.double' order by time"
                 ;
 
         TestRunner tr = new TestRunner();
@@ -52,7 +52,6 @@ public class Main {
                 String exercise = rs.getString("exerciseid");
                 String submittedfunction = rs.getString("submittedfunction");
                 String userid = rs.getString("userid");
-
 
                 Label ownLabel = null;
                 try {

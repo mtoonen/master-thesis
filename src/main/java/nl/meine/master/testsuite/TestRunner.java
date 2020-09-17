@@ -17,6 +17,7 @@ public class TestRunner {
 
     public TestRunner(){
         mappingExerciseToFunction.put("1.even", "countEven");
+        mappingExerciseToFunction.put("5.double", "hasDoubled");
         testRunners.add(new ForEachButIndexLabel(compiler));
         testRunners.add(new EarlyExitLabel(compiler));
     }
