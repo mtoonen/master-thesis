@@ -4,6 +4,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TestRunnerTest {
@@ -20,7 +22,8 @@ class TestRunnerTest {
 
     @Test
     void calculateLabel() throws UncompilableException {
-        Label label = instance.calculateLabel("1.even", TestUtils.FUNCTION_FOREACHBUTINDEX);
-        assertEquals("foreachbutindex", label.getLabel());
+        Set<Label> label = instance.calculateLabel("1.even", TestUtils.FUNCTION_FOREACHBUTINDEX);
+        assertEquals(1, label.size());
+        assertEquals("foreachbutindex", label.toArray(new Label[]{})[0].getLabel());
     }
 }

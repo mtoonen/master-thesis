@@ -64,7 +64,6 @@ public class OrInsteadOfAndLabel  extends CommonLogicLabel {
         try{
             Object result = executeSingle(input);
         }catch(Exception e){
-
             if (((InvocationTargetException) e).getTargetException() instanceof ArrayIndexOutOfBoundsException) {
                 addTestScore(true);
             }

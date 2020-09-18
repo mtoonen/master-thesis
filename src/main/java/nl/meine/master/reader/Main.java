@@ -21,19 +21,29 @@ public class Main {
         m.process();
     }
 
+
+    int total = 0;
+    int totalCorrect = 0;
+    int totalFound = 0;
+
+    Map<String, Integer> totalMap = new HashMap<>();
+    Map<String, Integer> totalCorrectMap = new HashMap<>();
+    Map<String, Integer> totalFoundMap = new HashMap<>();
+
     public void process() {
         String sql = "select *" +
                 "from trainingset "
                 + "where "
-                + "label in (" +
-               "'earlyexit'," +
+                + "label like '%incorrectf%'"
+             /*   + "label in (" +
+             /*  "'earlyexit'," +
                 " 'foreachbutindex'," +
                 "'alwaysadd',"+
                 "'orinsteadofand',"+
-                "'incorrectforeach'"+
-                ") "
-            //    +"and TIME = '2019-10-14 08:19:05.416394'"
-                 //+" and exerciseid = '4.score' order by time"
+                "'incorrectforeach'" +
+                ") "*/
+                + "and TIME = '2019-10-14 08:14:18.845787'"
+                //+" and exerciseid = '4.score' order by time"
                 ;
 
         TestRunner tr = new TestRunner();
@@ -42,53 +52,34 @@ public class Main {
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
-            int total = 0;
-            int totalCorrect = 0;
-            int totalFound = 0;
-
-
-            Map<String, Integer> totalMap = new HashMap<>();
-            Map<String, Integer> totalCorrectMap = new HashMap<>();
-            Map<String, Integer> totalFoundMap = new HashMap<>();
-
             Set<String> exercisesNotChecked = new HashSet<>();
             // loop through the result set
             while (rs.next()) {
                 String ts = rs.getString("TIME");
-                String dbLabel = rs.getString("label");
+                String[] dbLabels = rs.getString("label").split(",");
                 String exercise = rs.getString("exerciseid");
                 String submittedfunction = rs.getString("submittedfunction");
                 String userid = rs.getString("userid");
 
-                Label ownLabel = null;
+                Set<Label> ownLabel = null;
                 try {
-
-                    totalMap.put(dbLabel, totalMap.getOrDefault(dbLabel, 0) + 1);
-                    total++;
+                    addSubmission(dbLabels);
                     ownLabel = tr.calculateLabel(exercise, submittedfunction);
 
-                    if(!tr.hasTestForExercise(exercise)){
+                    if (!tr.hasTestForExercise(exercise)) {
                         exercisesNotChecked.add(exercise);
                         continue;
                     }
 
-                    if (ownLabel != null) {
-                        totalFoundMap.put(dbLabel, totalFoundMap.getOrDefault(dbLabel, 0) + 1);
-                        totalFound++;
-
-                        if (ownLabel.getLabel().equals(dbLabel)) {
-                            totalCorrectMap.put(dbLabel, totalCorrectMap.getOrDefault(dbLabel, 0) + 1);
-                            totalCorrect++;
-                        }else{
-                            int a = 0;
-                        }
+                    if (ownLabel != null && ownLabel.size() != 0) {
+                        addFound(ownLabel);
+                        addCorrect(dbLabels, ownLabel);
                     } else {
                         int a = 0;
                     }
 
                 } catch (UncompilableException e) {
-                    total--;
-                    totalMap.put(dbLabel, totalMap.getOrDefault(dbLabel, 0) - 1);
+                    subtractFound(dbLabels);
                 }
 
             }
@@ -103,6 +94,40 @@ public class Main {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    private void addCorrect(String[] dbLabels, Set<Label> own) {
+        for (String dbLabel : dbLabels) {
+            own.forEach(ownLabel -> {
+                if (ownLabel.getLabel().equals(dbLabel)) {
+                    totalCorrectMap.put(dbLabel, totalCorrectMap.getOrDefault(dbLabel, 0) + 1);
+                    totalCorrect++;
+                } else {
+                    int a = 0;
+                }
+            });
+        }
+    }
+
+    private void addSubmission(String[] dbLabels) {
+        for (String dbLabel : dbLabels) {
+            totalMap.put(dbLabel, totalMap.getOrDefault(dbLabel, 0) + 1);
+            total++;
+        }
+    }
+
+    private void subtractFound(String[] dbLabels) {
+        for (String dbLabel : dbLabels) {
+            total--;
+            totalMap.put(dbLabel, totalMap.getOrDefault(dbLabel, 0) - 1);
+        }
+    }
+
+    private void addFound( Set<Label> own) {
+        own.forEach(label -> {
+            totalFoundMap.put(label.getLabel(), totalFoundMap.getOrDefault(label.getLabel(), 0) + 1);
+            totalFound++;
+        });
     }
 
     public void calculateRelevance(Map<String, Integer> totalCorrectMap, Map<String, Integer> totalFoundMap, Map<String, Integer> totalMap) {

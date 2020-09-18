@@ -1,14 +1,8 @@
 package nl.meine.master.testsuite;
 
-import nl.meine.master.testsuite.tests.AlwaysAddLabel;
-import nl.meine.master.testsuite.tests.EarlyExitLabel;
-import nl.meine.master.testsuite.tests.ForEachButIndexLabel;
-import nl.meine.master.testsuite.tests.OrInsteadOfAndLabel;
+import nl.meine.master.testsuite.tests.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TestRunner {
@@ -35,6 +29,7 @@ public class TestRunner {
         testRunners.add(new EarlyExitLabel(compiler));
         testRunners.add(new AlwaysAddLabel(compiler));
         testRunners.add(new OrInsteadOfAndLabel(compiler));
+        testRunners.add(new IncorrectForEach(compiler));
 
         testRunners.forEach(runner -> {
             runner.setParameterTypesPerExercise(parameterTypesPerExercise);
@@ -54,7 +49,7 @@ public class TestRunner {
         return hasTest.get();
     }
 
-    public Label calculateLabel(String exercise, String functionBody) throws UncompilableException{
+    public Set<Label> calculateLabel(String exercise, String functionBody) throws UncompilableException{
         String functionName = mappingExerciseToFunction.get(exercise);
         if(functionName == null){
             return null;
@@ -70,6 +65,7 @@ public class TestRunner {
             int score = 0;
             String label = "";
             Map<String, Integer> labelWithScore = new HashMap<>();
+            Set<Label> labels = new HashSet<>();
             for (CommonLogicLabel runner: testRunners) {
                 int runnerScore =runner.calcScore(functionName);
                 String runnerLabel = runner.getLabel();
@@ -79,7 +75,14 @@ public class TestRunner {
                 }
                 labelWithScore.put(runnerLabel, runnerScore);
             }
-            return new Label(label,score);
+
+            int finalScore = score;
+            labelWithScore.forEach((l, s) -> {
+                if(s == finalScore){
+                    labels.add(new Label(l, s));
+                }
+            });
+            return labels;
         } catch (UncompilableException e) {
           throw e;
         }catch (Exception e){

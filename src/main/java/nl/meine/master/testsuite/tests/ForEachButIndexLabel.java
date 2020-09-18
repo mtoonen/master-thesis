@@ -141,9 +141,33 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
         /**
          * Checks if function sums all values on index 1
          */
-        Object[] input = {new int[]{1, 1, 1, 1},};
+        Object[] input = {new int[]{1, 1, 1, 1}};
         Object result = executeSingle(input);
-        addTestScore(result.equals(4));
+
+        try {
+            executeSingle(new Object[] {new int []{3}}); // should crash
+        } catch (Exception e) {
+            if (((InvocationTargetException) e).getTargetException() instanceof ArrayIndexOutOfBoundsException) {
+                addTestScore(result.equals(4));
+            }
+        }
+    }
+
+    @CommonLogicTest(functionNames = {"oddSum"})
+    public void oddSumCountMinus(String functionBody) throws Exception {
+        /**
+         * Checks if function sums all values on index 1
+         */
+        Object[] input = {new int[]{3,3,3,-1}};
+        Object result = executeSingle(input);
+
+        try {
+            executeSingle(new Object[] {new int []{3}}); // should crash
+        } catch (Exception e) {
+            if (((InvocationTargetException) e).getTargetException() instanceof ArrayIndexOutOfBoundsException) {
+                addTestScore(result.equals(-3));
+            }
+        }
     }
 
 }
