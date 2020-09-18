@@ -12,9 +12,7 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
     public ForEachButIndexLabel(InlineCompiler compiler) {
         label = "foreachbutindex";
         this.compiler = compiler;
-        addFunction("countEven", new Class[]{int[].class});
-        addFunction("oddSum", new Class[]{int[].class});
-        addFunction("sumValues", new Class[]{int[].class, boolean.class});
+        init();
     }
 
     @CommonLogicTest(functionNames = {"countEven"})

@@ -26,10 +26,11 @@ public class Main {
                 "from trainingset "
                 + "where "
                 + "label in (" +
-                "'earlyexit'," +
+               "'earlyexit'," +
                 " 'foreachbutindex'," +
                 "'alwaysadd',"+
-                "'orinsteadofand'"+
+                "'orinsteadofand',"+
+                "'incorrectforeach'"+
                 ") "
             //    +"and TIME = '2019-10-14 08:19:05.416394'"
                  //+" and exerciseid = '4.score' order by time"

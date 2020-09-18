@@ -15,6 +15,7 @@ public class TestRunner {
     private List<CommonLogicLabel> testRunners = new ArrayList<>();
     private Map<String, String> mappingExerciseToFunction = new HashMap<>();
     protected InlineCompiler compiler = new InlineCompiler();
+    protected Map<String, Class[]> parameterTypesPerExercise = new HashMap<>();
 
 
     public TestRunner(){
@@ -23,10 +24,21 @@ public class TestRunner {
         mappingExerciseToFunction.put("3.oddsum", "oddSum");
         mappingExerciseToFunction.put("4.score", "calculateScore");
         mappingExerciseToFunction.put("5.double", "hasDoubled");
+
+        parameterTypesPerExercise.put("countEven", new Class[]{int[].class});
+        parameterTypesPerExercise.put("oddSum", new Class[]{int[].class});
+        parameterTypesPerExercise.put("sumValues", new Class[]{int[].class, boolean.class});
+        parameterTypesPerExercise.put("hasDoubled", new Class[]{double.class, int.class});
+        parameterTypesPerExercise.put("calculateScore", new Class[]{int.class, int.class});
+
         testRunners.add(new ForEachButIndexLabel(compiler));
         testRunners.add(new EarlyExitLabel(compiler));
         testRunners.add(new AlwaysAddLabel(compiler));
         testRunners.add(new OrInsteadOfAndLabel(compiler));
+
+        testRunners.forEach(runner -> {
+            runner.setParameterTypesPerExercise(parameterTypesPerExercise);
+        });
     }
 
     public boolean hasTestForExercise(String exercise){

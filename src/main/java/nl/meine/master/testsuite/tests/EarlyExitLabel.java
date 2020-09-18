@@ -10,10 +10,7 @@ public class EarlyExitLabel extends CommonLogicLabel {
     public EarlyExitLabel(InlineCompiler compiler) {
         label = "earlyexit";
         this.compiler = compiler;
-        addFunction("countEven", new Class[]{int[].class});
-        addFunction("hasDoubled", new Class[]{double.class, int.class});
-        addFunction("sumValues", new Class[]{int[].class, boolean.class});
-        addFunction("oddSum", new Class[]{int[].class});
+        init();
     }
 
     @CommonLogicTest(functionNames = {"countEven"})

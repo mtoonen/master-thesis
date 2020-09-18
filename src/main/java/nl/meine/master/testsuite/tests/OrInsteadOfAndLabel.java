@@ -14,8 +14,7 @@ public class OrInsteadOfAndLabel  extends CommonLogicLabel {
     public OrInsteadOfAndLabel(InlineCompiler compiler) {
         label = "orinsteadofand";
         this.compiler = compiler;
-        addFunction("calculateScore", new Class[]{int.class, int.class});
-        addFunction("oddSum", new Class[]{int[].class});
+        init();
     }
 
     @CommonLogicTest(functionNames = {"calculateScore"})

@@ -22,20 +22,19 @@ public abstract class CommonLogicLabel {
         return submissionsPerExercise.containsKey(exercise);
     }
 
-    protected void addFunction(String functionName, Class[] parameterTypes) {
-        testResultsPerExercise.put(functionName, new HashMap<>());
-        parameterTypesPerExercise.put(functionName, parameterTypes);
+    public void setParameterTypesPerExercise(Map<String, Class[]> parameterTypesPerExercise ){
+        this.parameterTypesPerExercise = parameterTypesPerExercise;
+    }
 
+    protected void init() {
         // look which methods have the CommonLogicTest annotation. These are unittests for Common Logic Errors
         Class<? extends Annotation> annotation = CommonLogicTest.class;
         for (final Method method : this.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(annotation)) {
                 // Check for which exercises the tests are available
                 CommonLogicTest a = (CommonLogicTest) method.getAnnotation(annotation);
-                for (String forFunctionName : a.functionNames()) {
-                    if(!forFunctionName.equals(functionName)){
-                        continue;
-                    }
+                for (String functionName : a.functionNames()) {
+                    testResultsPerExercise.put(functionName, new HashMap<>());
                     if (!submissionsPerExercise.containsKey(functionName)) {
                         submissionsPerExercise.put(functionName, new ArrayList<>());
                     }

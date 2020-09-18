@@ -8,8 +8,7 @@ public class AlwaysAddLabel extends CommonLogicLabel {
     public AlwaysAddLabel(InlineCompiler compiler) {
         label = "alwaysadd";
         this.compiler = compiler;
-
-        addFunction("sumValues", new Class[]{int[].class, boolean.class});
+        init();
     }
 
 
