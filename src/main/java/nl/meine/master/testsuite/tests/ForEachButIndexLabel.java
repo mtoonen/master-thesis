@@ -9,8 +9,6 @@ import java.lang.reflect.InvocationTargetException;
 
 public class ForEachButIndexLabel extends CommonLogicLabel {
 
-    public Class[] paramType = null;
-
     public ForEachButIndexLabel(InlineCompiler compiler) {
         label = "foreachbutindex";
         this.compiler = compiler;
@@ -116,6 +114,23 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
         Object result = executeSingle(input);
         try {
             executeSingle(new Object[] {new int []{3},false}); // should crash
+        } catch (Exception e) {
+            if (((InvocationTargetException) e).getTargetException() instanceof ArrayIndexOutOfBoundsException) {
+                addTestScore(result.equals(4));
+            }
+        }
+    }
+
+
+    @CommonLogicTest(functionNames = {"sumValues"})
+    public void sumValuesPositiveCrashWhenIndexingWhenTrue(String functionBody) throws Exception {
+        /**
+         * Checks if function sums positive values on index 1
+         */
+        Object[] input = {new int[]{1, 1, 1, 1}, true};
+        Object result = executeSingle(input);
+        try {
+            executeSingle(new Object[] {new int []{3},true}); // should crash
         } catch (Exception e) {
             if (((InvocationTargetException) e).getTargetException() instanceof ArrayIndexOutOfBoundsException) {
                 addTestScore(result.equals(4));

@@ -3,6 +3,7 @@ package nl.meine.master.testsuite;
 import nl.meine.master.testsuite.tests.AlwaysAddLabel;
 import nl.meine.master.testsuite.tests.EarlyExitLabel;
 import nl.meine.master.testsuite.tests.ForEachButIndexLabel;
+import nl.meine.master.testsuite.tests.OrInsteadOfAndLabel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,10 +21,12 @@ public class TestRunner {
         mappingExerciseToFunction.put("1.even", "countEven");
         mappingExerciseToFunction.put("2.sumvalues", "sumValues");
         mappingExerciseToFunction.put("3.oddsum", "oddSum");
+        mappingExerciseToFunction.put("4.score", "calculateScore");
         mappingExerciseToFunction.put("5.double", "hasDoubled");
         testRunners.add(new ForEachButIndexLabel(compiler));
         testRunners.add(new EarlyExitLabel(compiler));
         testRunners.add(new AlwaysAddLabel(compiler));
+        testRunners.add(new OrInsteadOfAndLabel(compiler));
     }
 
     public boolean hasTestForExercise(String exercise){

@@ -26,12 +26,13 @@ public class Main {
                 "from trainingset "
                 + "where "
                 + "label in (" +
-                //"'earlyexit'," +
-              //  " 'foreachbutindex'," +
-                "'alwaysadd'"+
+                "'earlyexit'," +
+                " 'foreachbutindex'," +
+                "'alwaysadd',"+
+                "'orinsteadofand'"+
                 ") "
-            //    +"and TIME = '2019-10-14 08:03:24.237775'"
-                 //+" and exerciseid = '3.oddsum' order by time"
+            //    +"and TIME = '2019-10-14 08:19:05.416394'"
+                 //+" and exerciseid = '4.score' order by time"
                 ;
 
         TestRunner tr = new TestRunner();
