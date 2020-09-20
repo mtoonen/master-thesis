@@ -42,7 +42,7 @@ public class Main {
                 "'orinsteadofand',"+
                 "'incorrectforeach'" +
                 ") "*/
-                + "and TIME = '2019-10-14 08:14:18.845787'"
+              //  + "and TIME = '2019-10-14 08:14:18.845787'"
                 //+" and exerciseid = '4.score' order by time"
                 ;
 
@@ -72,7 +72,7 @@ public class Main {
                     }
 
                     if (ownLabel != null && ownLabel.size() != 0) {
-                        addFound(ownLabel);
+                        addFound(ownLabel,dbLabels);
                         addCorrect(dbLabels, ownLabel);
                     } else {
                         int a = 0;
@@ -123,7 +123,7 @@ public class Main {
         }
     }
 
-    private void addFound( Set<Label> own) {
+    private void addFound( Set<Label> own, String[] dbLabels) {
         own.forEach(label -> {
             totalFoundMap.put(label.getLabel(), totalFoundMap.getOrDefault(label.getLabel(), 0) + 1);
             totalFound++;
@@ -145,6 +145,9 @@ public class Main {
     }
 
     public Double calculatePrecision(int totalCorrect, int totalFound) {
+        if(totalFound ==0){
+            return 0.0;
+        }
         return totalCorrect / (double) totalFound;
     }
 

@@ -19,23 +19,4 @@ public class IncorrectForEach extends CommonLogicLabel {
         addTestScore(result.equals(-1));
     }
 
-    public static int oddSum(int[] array) {
-        int total = 0;
-        boolean stop = false;
-        for (int i : array) {
-            if (i % 2 != 0) {
-                if (stop == false) {
-                    if (i != -1) {
-                        total += array[i];
-                    } else {
-                        stop = true;
-                    }
-                } else {
-                    total = total;
-                }
-            }
-
-        }
-        return total;
-    }
 }

@@ -73,7 +73,9 @@ public class TestRunner {
                     score = runnerScore;
                     label = runnerLabel;
                 }
-                labelWithScore.put(runnerLabel, runnerScore);
+                if(runnerScore != 0){
+                    labelWithScore.put(runnerLabel, runnerScore);
+                }
             }
 
             int finalScore = score;
