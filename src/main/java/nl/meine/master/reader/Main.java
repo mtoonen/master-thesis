@@ -3,20 +3,22 @@ package nl.meine.master.reader;
 import nl.meine.master.testsuite.Label;
 import nl.meine.master.testsuite.TestRunner;
 import nl.meine.master.testsuite.UncompilableException;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Main m = new Main();
         m.process();
     }
@@ -30,26 +32,35 @@ public class Main {
     Map<String, Integer> totalCorrectMap = new HashMap<>();
     Map<String, Integer> totalFoundMap = new HashMap<>();
 
-    public void process() {
+    public void process() throws IOException {
         String sql = "select *" +
                 "from trainingset "
                 + "where "
-                + "label like '%incorrectf%'"
-             /*   + "label in (" +
-             /*  "'earlyexit'," +
+                // + "label like '%incorrectf%'"
+                + "label in (" +
+                "'earlyexit'," +
                 " 'foreachbutindex'," +
-                "'alwaysadd',"+
-                "'orinsteadofand',"+
-                "'incorrectforeach'" +
-                ") "*/
-              //  + "and TIME = '2019-10-14 08:14:18.845787'"
+                "'alwaysadd'," +
+                "'orinsteadofand'" +
+                //    "'incorrectforeach'" +
+                ") "
+                //  + "and TIME = '2019-10-14 08:14:18.845787'"
                 //+" and exerciseid = '4.score' order by time"
                 ;
 
         TestRunner tr = new TestRunner();
 
+        FileWriter out = new FileWriter("/home/meine/Dropbox/Studie/Open Universiteit/Afstuderen/Orange/features.csv");
+        List<String> sortedKeys = tr.getUnittestNames();
+
+        Collections.sort(sortedKeys);
+
+
+        sortedKeys.add(0, "time");
+        sortedKeys.add(1, "targetlabel");
         try (Connection conn = DB.connect();
              Statement stmt = conn.createStatement();
+             CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT.withHeader(sortedKeys.toArray(new String[]{})));
              ResultSet rs = stmt.executeQuery(sql)) {
 
             Set<String> exercisesNotChecked = new HashSet<>();
@@ -64,19 +75,34 @@ public class Main {
                 Set<Label> ownLabel = null;
                 try {
                     addSubmission(dbLabels);
-                    ownLabel = tr.calculateLabel(exercise, submittedfunction);
+                    //ownLabel = tr.calculateLabel(exercise, submittedfunction);
 
                     if (!tr.hasTestForExercise(exercise)) {
                         exercisesNotChecked.add(exercise);
                         continue;
                     }
 
+                    Map<String, Boolean> results = tr.calculateLabel(exercise, submittedfunction);
+                    printer.print(ts);
+                    printer.print(dbLabels[0]);
+                    sortedKeys.forEach(unitTest -> {
+                        try {
+                            if(results.containsKey(unitTest)){
+                                printer.print(results.get(unitTest));
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    printer.println();
+                    int a = 0;
+/*
                     if (ownLabel != null && ownLabel.size() != 0) {
                         addFound(ownLabel,dbLabels);
                         addCorrect(dbLabels, ownLabel);
                     } else {
                         int a = 0;
-                    }
+                    }*/
 
                 } catch (UncompilableException e) {
                     subtractFound(dbLabels);
@@ -94,6 +120,10 @@ public class Main {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    private void writeRow(){
+
     }
 
     private void addCorrect(String[] dbLabels, Set<Label> own) {

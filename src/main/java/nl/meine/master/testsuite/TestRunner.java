@@ -49,7 +49,21 @@ public class TestRunner {
         return hasTest.get();
     }
 
-    public Set<Label> calculateLabel(String exercise, String functionBody) throws UncompilableException{
+    public List<String> getUnittestNames(){
+        List<String> tests = new ArrayList<>();
+        for (CommonLogicLabel runner: testRunners) {
+            runner.submissionsPerExercise.forEach((ex, methods) -> {
+                methods.forEach(method -> {
+                    tests.add(method.getName());
+                });
+            });
+        }
+        Collections.sort(tests);
+        return tests;
+    }
+
+    public Map<String,Boolean> calculateLabel(String exercise, String functionBody) throws UncompilableException{
+        Map<String,Boolean> unitTestsResults = new HashMap<>();
         String functionName = mappingExerciseToFunction.get(exercise);
         if(functionName == null){
             return null;
@@ -67,7 +81,13 @@ public class TestRunner {
             Map<String, Integer> labelWithScore = new HashMap<>();
             Set<Label> labels = new HashSet<>();
             for (CommonLogicLabel runner: testRunners) {
-                int runnerScore =runner.calcScore(functionName);
+                runner.submissionsPerExercise.forEach((ex, methods) -> {
+                    runner.testResultsPerExercise.get(ex).forEach((unitTestName, fired) -> {
+                        unitTestsResults.put(unitTestName, fired);
+                    });
+                });
+
+                /*int runnerScore =runner.calcScore(functionName);
                 String runnerLabel = runner.getLabel();
                 if (runnerScore > score) {
                     score = runnerScore;
@@ -75,7 +95,7 @@ public class TestRunner {
                 }
                 if(runnerScore != 0){
                     labelWithScore.put(runnerLabel, runnerScore);
-                }
+                }*/
             }
 
             int finalScore = score;
@@ -84,13 +104,12 @@ public class TestRunner {
                     labels.add(new Label(l, s));
                 }
             });
-            return labels;
         } catch (UncompilableException e) {
           throw e;
         }catch (Exception e){
             System.err.println("Error during running" + e.getLocalizedMessage());
         }
-        return null;
+        return unitTestsResults;
     }
 
 }
