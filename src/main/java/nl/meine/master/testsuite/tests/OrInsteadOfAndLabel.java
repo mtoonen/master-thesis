@@ -56,6 +56,21 @@ public class OrInsteadOfAndLabel  extends CommonLogicLabel {
     }
 
     @CommonLogicTest(functionNames = {"oddSum"})
+    public void fa(String functionBody) throws Exception {
+        /**
+         * Checks if function doesn't respect boundary because of using the or instead of and
+         */
+        Object[] input = {new int[]{1, 1, 1, 1}};
+        try{
+            Object result = executeSingle(input);
+        }catch(Exception e){
+            if (((InvocationTargetException) e).getTargetException() instanceof ArrayIndexOutOfBoundsException) {
+                addTestScore(true);
+            }
+        }
+    }
+
+    @CommonLogicTest(functionNames = {"oddSum"})
     public void oddSum(String functionBody) throws Exception {
         /**
          * Checks if function doesn't respect boundary because of using the or instead of and

@@ -30,6 +30,7 @@ public class TestRunner {
         testRunners.add(new AlwaysAddLabel(compiler));
         testRunners.add(new OrInsteadOfAndLabel(compiler));
         testRunners.add(new IncorrectForEach(compiler));
+        testRunners.add(new NoElseClause(compiler));
 
         testRunners.forEach(runner -> {
             runner.setParameterTypesPerExercise(parameterTypesPerExercise);
@@ -62,7 +63,7 @@ public class TestRunner {
         return tests;
     }
 
-    public Map<String,Boolean> calculateLabel(String exercise, String functionBody) throws UncompilableException{
+    public Map<String,Boolean> executeTests(String exercise, String functionBody) throws UncompilableException{
         Map<String,Boolean> unitTestsResults = new HashMap<>();
         String functionName = mappingExerciseToFunction.get(exercise);
         if(functionName == null){
@@ -86,16 +87,6 @@ public class TestRunner {
                         unitTestsResults.put(unitTestName, fired);
                     });
                 });
-
-                /*int runnerScore =runner.calcScore(functionName);
-                String runnerLabel = runner.getLabel();
-                if (runnerScore > score) {
-                    score = runnerScore;
-                    label = runnerLabel;
-                }
-                if(runnerScore != 0){
-                    labelWithScore.put(runnerLabel, runnerScore);
-                }*/
             }
 
             int finalScore = score;
@@ -110,6 +101,57 @@ public class TestRunner {
             System.err.println("Error during running" + e.getLocalizedMessage());
         }
         return unitTestsResults;
+    }
+
+
+    public Set<Label>  calculateLabelAdhoc(String exercise, String functionBody) throws UncompilableException{
+        Map<String,Boolean> unitTestsResults = new HashMap<>();
+        String functionName = mappingExerciseToFunction.get(exercise);
+        if(functionName == null){
+            return null;
+        }
+        Set<Label> labels = new HashSet<>();
+        try {
+            compiler.init(functionBody);
+            testRunners.forEach(runner -> {
+                runner.reset();
+                runner.runall(functionBody,functionName);
+            });
+            compiler.tearDown();
+
+            int score = 0;
+            String label = "";
+            Map<String, Integer> labelWithScore = new HashMap<>();
+            for (CommonLogicLabel runner: testRunners) {
+               /* runner.submissionsPerExercise.forEach((ex, methods) -> {
+                    runner.testResultsPerExercise.get(ex).forEach((unitTestName, fired) -> {
+                        unitTestsResults.put(unitTestName, fired);
+                    });
+                });*/
+
+                int runnerScore =runner.calcScore(functionName);
+                String runnerLabel = runner.getLabel();
+                if (runnerScore > score) {
+                    score = runnerScore;
+                    label = runnerLabel;
+                }
+                if(runnerScore != 0){
+                    labelWithScore.put(runnerLabel, runnerScore);
+                }
+            }
+
+            int finalScore = score;
+            labelWithScore.forEach((l, s) -> {
+                if(s == finalScore){
+                    labels.add(new Label(l, s));
+                }
+            });
+        } catch (UncompilableException e) {
+            throw e;
+        }catch (Exception e){
+            System.err.println("Error during running" + e.getLocalizedMessage());
+        }
+        return labels;
     }
 
 }

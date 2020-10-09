@@ -15,12 +15,47 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         Main m = new Main();
         m.process();
+        //m.extractSubmitted();
+    }
+
+    public void extractSubmitted(){
+        String sql = "select TIME,exerciseid, serviceinfo,input, output,label " +
+                "from studyrequests "+
+                "where serviceinfo like 'Buggy%'";
+
+
+        try (Connection conn = DB.connect();
+             Statement stmt  = conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)){
+
+            // loop through the result set
+            while (rs.next()) {
+                String ts = rs.getString("TIME");
+                String inputString = rs.getString("input");
+                String label = rs.getString("label");
+                JSONObject input = new JSONObject(inputString);
+                JSONArray params = input.getJSONArray("params");
+                if(!params.isEmpty()){
+                    String bodyOutside = params.getString(1);
+                   // System.out.println(ts);
+                    //System.out.println(bodyOutside);
+
+                    String update = "update studyrequests set submittedfunction = '"+bodyOutside+"' where time = '" + ts +"';";
+                    Statement updateStmt  = conn.createStatement();
+                    int res    = updateStmt.executeUpdate(update);
+                    if(res != 1){
+                        int a = 0;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 
@@ -34,17 +69,24 @@ public class Main {
 
     public void process() throws IOException {
         String sql = "select *" +
-                "from trainingset "
+                "from studyrequests "
                 + "where "
                 // + "label like '%incorrectf%'"
-                + "label in (" +
+                + " (label like '%earlyexit%'"
+                + " OR label like '%foreachbutindex%'"
+                + " OR label like '%alwaysadd%'"
+                + " OR label like '%noelseclause%'"
+                + " OR label like '%orinsteadofand%'"
+                + " OR label like '%incorrectforeach%') and not label like '%onlypositive%'"
+             /*   + "label in (" +
                 "'earlyexit'," +
                 " 'foreachbutindex'," +
                 "'alwaysadd'," +
-                "'orinsteadofand'" +
-                //    "'incorrectforeach'" +
-                ") "
-                //  + "and TIME = '2019-10-14 08:14:18.845787'"
+                "'noelseclause'," +
+                "'orinsteadofand'," +
+                    "'incorrectforeach'" +
+                ") "*/
+                // + "and TIME = '2019-10-14 08:03:55.081647'"
                 //+" and exerciseid = '4.score' order by time"
                 ;
 
@@ -57,7 +99,15 @@ public class Main {
 
 
         sortedKeys.add(0, "time");
-        sortedKeys.add(1, "targetlabel");
+        sortedKeys.add(1, "targetlabel1");
+        sortedKeys.add(2, "targetlabel2");
+        sortedKeys.add(3, "targetlabel3");
+        sortedKeys.add(4, "exercise1");
+        sortedKeys.add(5, "exercise2");
+        sortedKeys.add(6, "exercise3");
+        sortedKeys.add(7, "exercise4");
+        sortedKeys.add(8, "exercise5");
+        sortedKeys.add(9, "exerciseid");
         try (Connection conn = DB.connect();
              Statement stmt = conn.createStatement();
              CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT.withHeader(sortedKeys.toArray(new String[]{})));
@@ -72,7 +122,7 @@ public class Main {
                 String submittedfunction = rs.getString("submittedfunction");
                 String userid = rs.getString("userid");
 
-                Set<Label> ownLabel = null;
+                Set<Label> ownLabels = null;
                 try {
                     addSubmission(dbLabels);
                     //ownLabel = tr.calculateLabel(exercise, submittedfunction);
@@ -82,9 +132,13 @@ public class Main {
                         continue;
                     }
 
-                    Map<String, Boolean> results = tr.calculateLabel(exercise, submittedfunction);
+                    Map<String, Boolean> results = tr.executeTests(exercise, submittedfunction);
+                    ownLabels  = tr.calculateLabelAdhoc(exercise, submittedfunction);
                     printer.print(ts);
-                    printer.print(dbLabels[0]);
+                    writeLabels(dbLabels, printer);
+                    writeExercise(exercise,printer);
+                    printer.print(exercise);
+
                     sortedKeys.forEach(unitTest -> {
                         try {
                             if(results.containsKey(unitTest)){
@@ -96,13 +150,13 @@ public class Main {
                     });
                     printer.println();
                     int a = 0;
-/*
-                    if (ownLabel != null && ownLabel.size() != 0) {
-                        addFound(ownLabel,dbLabels);
-                        addCorrect(dbLabels, ownLabel);
+
+                    if (ownLabels != null && ownLabels.size() != 0) {
+                        addFound(ownLabels,dbLabels);
+                        addCorrect(dbLabels, ownLabels);
                     } else {
-                        int a = 0;
-                    }*/
+                        int b = 0;
+                    }
 
                 } catch (UncompilableException e) {
                     subtractFound(dbLabels);
@@ -122,9 +176,26 @@ public class Main {
         }
     }
 
-    private void writeRow(){
-
+    private void writeLabels(String[] dbLabels,CSVPrinter printer) throws IOException {
+        String[] l = new String[]{"","",""};
+        for (int i = 0; i < dbLabels.length; i++) {
+            l[i] = dbLabels[i];
+        }
+        printer.print(l[0]);
+        printer.print(l[1]);
+        printer.print(l[2]);
     }
+
+    private void writeExercise(String exerciseId, CSVPrinter printer) throws IOException {
+        boolean [] exercises = new boolean[5];
+        for (int i = 0; i <5; i++) {
+            if(exerciseId.contains( ""+(i+1))){
+                exercises[i] = true;
+            }
+            printer.print(exercises[i]);
+        }
+    }
+
 
     private void addCorrect(String[] dbLabels, Set<Label> own) {
         for (String dbLabel : dbLabels) {
