@@ -39,9 +39,9 @@ public class AlwaysAddLabel extends CommonLogicLabel {
 
 
     @CommonLogicTest(functionNames = {"sumValues"})
-    public void extraCheckForPositive(String functionBody) throws Exception {
-        Object[] input = {new int[]{-5,-5}, false};
-        int expected = 0;
+    public void onlyPositivesFalse(String functionBody) throws Exception {
+        Object[] input = {new int[]{-5,-5,1}, false};
+        int expected = -9;
         Object result = null;
         result = executeSingle( input);
 
@@ -49,9 +49,9 @@ public class AlwaysAddLabel extends CommonLogicLabel {
     }
 
     @CommonLogicTest(functionNames = {"sumValues"})
-    public void extraCheckForPositive2(String functionBody) throws Exception {
-        Object[] input = {new int[]{-5,-5}, true};
-        int expected = 0;
+    public void onlyPositivesTrue(String functionBody) throws Exception {
+        Object[] input = {new int[]{-5,-5,1}, true};
+        int expected = 1;
         Object result = null;
         result = executeSingle( input);
 
