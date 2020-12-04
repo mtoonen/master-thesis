@@ -13,7 +13,7 @@ public class AlwaysAddLabel extends CommonLogicLabel {
 
 
     @CommonLogicTest(functionNames = {"sumValues"})
-    public void noIF(String functionBody) throws Exception {
+    public void noIf(String functionBody) throws Exception {
         Object[] input = {new int[]{1,2,3,4}, true};
         int expected = 10;
         Object result = null;

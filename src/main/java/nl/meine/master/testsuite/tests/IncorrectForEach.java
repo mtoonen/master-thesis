@@ -34,7 +34,7 @@ public class IncorrectForEach extends CommonLogicLabel {
     }
 
     @CommonLogicTest(functionNames = {"oddSum"})
-    public void tooEarlyUpdatingIndices(String functionBody) throws Exception {
+    public void indexUpdatedTooEarly(String functionBody) throws Exception {
         Object[] input = {new int[]{1,2}};
         try {
             Object result = executeSingle(input);

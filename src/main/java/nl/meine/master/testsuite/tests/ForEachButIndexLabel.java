@@ -16,7 +16,7 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
     }
 
     @CommonLogicTest(functionNames = {"countEven"})
-    public void exceptionTest(String functionBody) {
+    public void useValueAsIndexPlus(String functionBody) {
         /**
          * This test is based on the premise that when using the value to retrieve a value from the array on that index
          * (the value being the index), we get an ArrayIndexOutOfBoundsException when defining an array of length 1
@@ -33,11 +33,11 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
     }
 
     @CommonLogicTest(functionNames = {"countEven"})
-    public void exceptionTestMinus(String functionBody) {
+    public void useValueAsIndexMinus(String functionBody) {
         /**
          * This test is based on the premise that when using the value to retrieve a value from the array on that index
          * (the value being the index), we get an ArrayIndexOutOfBoundsException when defining an array of length 1
-         * with the first element being > 1. This will let the function retrieve a value outside the bounds
+         * with the first element being < 1. This will let the function retrieve a value outside the bounds
          */
         Object[] input = {new int[]{-2}};
         try {
@@ -63,11 +63,11 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
     }
 
     @CommonLogicTest(functionNames = {"countEven"})
-    public void countSpecificIndices2(String functionBody) throws Exception {
+    public void countSpecificIndicesInverted(String functionBody) throws Exception {
         /**
-         * This test looks if the value is used to look up a value in the array. We set all the values to 2, except on the 3rd index,
+         * This test looks if the value is used to look up a value in the array. We set all the values to 0, except on the 4rd index,
          * that one is 1. When the label foreachbutindex should apply, when checking the 3rd value (1), it will retrieve the value on
-         * values[1], which is 2. All other values result in check the value 1 for evenness. Result should be that the function counts
+         * values[1], which is 0. All other values result in check the value 1 for evenness. Result should be that the function counts
          * only one instance of an even number
          */
         Object[] input = {new int[]{0, 0, 0, 0, 1,}};
@@ -121,7 +121,7 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
 
 
     @CommonLogicTest(functionNames = {"sumValues"})
-    public void sumValuesPositiveCrashWhenIndexingWhenTrue(String functionBody) throws Exception {
+    public void crashWhenIndexingWhenonlypositivesTrue(String functionBody) throws Exception {
         /**
          * Checks if function sums positive values on index 1
          */
@@ -137,7 +137,7 @@ public class ForEachButIndexLabel extends CommonLogicLabel {
     }
 
     @CommonLogicTest(functionNames = {"oddSum"})
-    public void oddSum(String functionBody) throws Exception {
+    public void sum(String functionBody) throws Exception {
         /**
          * Checks if function sums all values on index 1
          */

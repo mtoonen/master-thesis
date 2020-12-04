@@ -32,7 +32,7 @@ public class EarlyExitLabel extends CommonLogicLabel {
     }
 
     @CommonLogicTest(functionNames = {"countEven"})
-    public void exitsAfterFirstIterationIncorrectCheck(String functionBody) throws Exception {
+    public void exitsAfterFirstIterationCountEven(String functionBody) throws Exception {
         Object[] evenInput = {new int[]{2,2}};
         int evenExpected = 0;
         Object evenresult = executeSingle(evenInput);
@@ -67,7 +67,7 @@ public class EarlyExitLabel extends CommonLogicLabel {
     }
 
     @CommonLogicTest(functionNames = {"oddSum"})
-    public void oddSumFirstIteration(String functionBody) throws Exception {
+    public void exitsAfterFirstIterationOddSum(String functionBody) throws Exception {
         Object[] evenInput = {new int[] {1,16,2,3}};
         int evenExpected = 16;
         Object result = executeSingle( evenInput);
